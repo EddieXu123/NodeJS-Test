@@ -1,10 +1,19 @@
 const config = require('config');
 const helmet = require('helmet');
 const morgan = require('morgan');
+
+// Debuggers
+const startupDebugger = require('debug')('app:startup');
+const dbDebugger = require('debug')('app:db');
+
 const Joi = require('joi'); // Joi class is returned (input validation package)
 const logger = require('./logger'); // Middleware functions module
 const express = require('express'); // import express modules
 const app = express(); // app represents express object
+
+// Templating Engines
+app.set('view engine', 'pug');
+app.set('views', './views');
 
 // Middleware to parse JSON
 app.use(express.json()); 
@@ -30,9 +39,11 @@ console.log('Mail Password: ' + config.get('mail.password'));
 if (app.get('env') === 'development') {
     // Using another third-party middleware (look at documentation)
     app.use(morgan('tiny'));
-    console.log('Morgan Enabled');
+    startupDebugger('Morgan Enabled...');
 }
 
+// Db work...
+dbDebugger('Connected to the database...');
 
 // Middleware with clean code (putting it in a separate module)
 const logging = logger.logging;
@@ -55,7 +66,7 @@ const courses = [
 // First is the url, then the callback function
 // Defining a route
 app.get('/', (req, res) => {
-    res.send("Hello World!!"); 
+    res.render('index', { title: 'My Express App', message: 'Hello'}); // Using Pug
 });
 
 app.get('/api/courses', (req, res) => {
