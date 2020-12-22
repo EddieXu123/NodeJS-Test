@@ -1,3 +1,6 @@
+const express = require('express'); // import express modules
+const app = express(); // app represents express object
+
 const config = require('config');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -7,13 +10,11 @@ const startupDebugger = require('debug')('app:startup');
 const dbDebugger = require('debug')('app:db');
 
 const Joi = require('joi'); // Joi class is returned (input validation package)
-const logger = require('./logger'); // Middleware functions module
+const logger = require('./middleware/logger'); // Middleware functions module
 
+// Restructuring Express Applications
 const courses = require('./routes/courses')
 const route = require('./routes/route');
-
-const express = require('express'); // import express modules
-const app = express(); // app represents express object
 
 // Templating Engines
 app.set('view engine', 'pug');
@@ -66,8 +67,6 @@ app.use(auth);
 // app.put();
 // app.delete();
 
-
-
 // PORT
 const port = process.env.PORT || 3000 // If 
 
@@ -75,8 +74,3 @@ const port = process.env.PORT || 3000 // If
 app.listen(port, () => {
     console.log(`Listening on port ${port}...`);
 });
-
-
-
-
-
